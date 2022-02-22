@@ -23,13 +23,11 @@ del autoapt
 Then whenever you try to import a missing module, you will see something like:
 
 ```
-   >> import pstats
+   >> import shortuuidfield
 
-Traceback (most recent call last):
-  File "autoapt_import.py", line 56, in <module>
-    exec cmd
-  File "<string>", line 1, in <module>
-ImportError: No module named pstats you may try packages: python-profiler python3-profiler
+      Traceback (most recent call last):
+        File "<stdin>", line 1, in <module>
+      ModuleNotFoundError: To get missing module 'shortuuidfield' you may try among packages: python3-django-shortuuidfield
 ```
 
 LICENSE:
