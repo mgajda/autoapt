@@ -4,6 +4,12 @@ DESCRIPTION:
 This module allows to run auto-apt to find missing python modules.
 It is most convenient when chained as a part of `sys.excepthook`.
 
+It requires that you install `apt-file`:
+
+```
+apt-get install -y apt-file
+```
+
 USAGE:
 ======
 
