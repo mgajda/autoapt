@@ -34,7 +34,7 @@ def auto_apt(name):
                          , encoding = "ascii" )
   out, err = proc.communicate()
   if err.strip() != "":
-    print("auto-apt error: %s" % err, file=sys.stderr)
+    print("apt-file error: %s\nDid you install it?" % err, file=sys.stderr)
   results = set([])
   for line in out.split("\n"):
     if (".py" not in line) and ("python3" not in line): # false positive?
