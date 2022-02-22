@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+__all__ = ["auto_apt", "install_excepthook"]
+
 import subprocess, sys
 """This module allows to run auto-apt to find missing python modules.
    It is most convenient when chained as a part of sys.excepthook.
@@ -43,26 +45,30 @@ def auto_apt(name):
     results.add(line.split(":")[0])
   return results
 
-def excepthook(exctype, exc, trace):
+installed_autoapt = False
+original_excepthook = sys.excepthook
+
+def autoapt_excepthook(exctype, exc, trace):
   """
   Unhandled exception hook:
   If exception is ImportError,
   then call `auto_apt` function to discover the Apt package to install.
   """
-  if exctype == ImportError:
-    missing_module_string = "No module named "
-    if exc.args[0].startswith(missing_module_string):
-      name = exc.args[0][len(missing_module_string):]
-      packages = " ".join(auto_apt(name))
+  print(exc.args)
+  if exctype == ModuleNotFoundError:
+    packages = " ".join(auto_apt(exc.name))
     exc.args = ("For %s you may try one of the packages: %s"
-                   % (exc.args[0], packages),)
+                   % (exc.name, packages),)
   original_excepthook(exctype, exc, trace)
 
 def install_hook():
   "Install a global hook of unhandled exceptions."
   global original_excepthook
-  original_excepthook = sys.excepthook
-  sys.excepthook = excepthook
+  global installed_autoapt
+  if not installed_autoapt:
+      installed_autoapt = True
+      original_excepthook = sys.excepthook
+      sys.excepthook = autoapt_excepthook
 
 install_hook()
 
