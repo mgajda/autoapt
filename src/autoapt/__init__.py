@@ -28,10 +28,10 @@ def auto_apt(name):
   """
   For a given import name, find a file that may provide it with `apt-file`.
   """
-  proc = subprocess.Popen(["apt-file", "search", name.replace(".", "/")],
-                          stdout   = subprocess.PIPE,
-                          stderr   = subprocess.PIPE,
-                          encoding = "ascii")
+  proc = subprocess.Popen( ["apt-file", "search", name.replace(".", "/")]
+                         , stdout   = subprocess.PIPE
+                         , stderr   = subprocess.PIPE
+                         , encoding = "ascii" )
   out, err = proc.communicate()
   if err.strip() != "":
     print("auto-apt error: %s" % err, file=sys.stderr)
@@ -54,11 +54,17 @@ def autoapt_excepthook(exctype, exc, trace):
   If exception is ImportError,
   then call `auto_apt` function to discover the Apt package to install.
   """
-  print(exc.args)
+  #print(exc.args)
   if exctype == ModuleNotFoundError:
+    #print("exc.name=%s" % exc.name)
     packages = " ".join(auto_apt(exc.name))
-    exc.args = ("For %s you may try one of the packages: %s"
-                   % (exc.name, packages),)
+    #print("exc.msg=%s" % exc.msg)
+    exc.msg = ("To get missing module '%s' you may try among packages: %s"
+                  % (exc.name, packages))
+    exc.args = (exc.msg,)
+    #print("exc=%s" % exc)
+    #print("exc.msg=%s" % exc.msg)
+    #print("trace=%s" % trace)
   original_excepthook(exctype, exc, trace)
 
 def install_hook():
@@ -66,9 +72,9 @@ def install_hook():
   global original_excepthook
   global installed_autoapt
   if not installed_autoapt:
-      installed_autoapt = True
-      original_excepthook = sys.excepthook
-      sys.excepthook = autoapt_excepthook
+    installed_autoapt   = True
+    original_excepthook = sys.excepthook
+    sys.excepthook      = autoapt_excepthook
 
 install_hook()
 
