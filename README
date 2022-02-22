@@ -1,0 +1,35 @@
+DESCRIPTION:
+============
+
+This module allows to run auto-apt to find missing python modules.
+It is most convenient when chained as a part of `sys.excepthook`.
+
+USAGE:
+======
+
+Try putting the following into your .pythonrc:
+
+```
+import autoapt, sys
+autoapt.install_hook()
+del autoapt
+```
+Then whenever you try to import a missing module, you will see something like:
+
+```
+   >> import pstats
+
+Traceback (most recent call last):
+  File "autoapt_import.py", line 56, in <module>
+    exec cmd
+  File "<string>", line 1, in <module>
+ImportError: No module named pstats you may try packages: python-profiler python3-profiler
+```
+
+LICENSE:
+========
+BSD3
+
+AUTHOR:
+=======
+Michał J. Gajda
